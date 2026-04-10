@@ -1,7 +1,7 @@
 # paper-orchestra
 
-A pluggable skill pack that lets **any coding agent** — Claude Code, Cursor,
-Antigravity, Cline, Aider, OpenCode, etc. — run the
+A pluggable skill pack that lets **any coding agent** in Claude Code, Cursor,
+Antigravity, Cline, Aider, OpenCode, etc. which can run the
 [**PaperOrchestra**](https://arxiv.org/pdf/2604.05018) multi-agent pipeline for
 turning unstructured research materials into a submission-ready LaTeX paper.
 
@@ -19,17 +19,15 @@ turning unstructured research materials into a submission-ready LaTeX paper.
 
 ## Why this exists
 
-The paper defines a five-agent pipeline (Outline → Plotting ∥ Literature Review
-→ Section Writing → Content Refinement) that substantially outperforms
-single-agent and tree-search baselines on the `PaperWritingBench` benchmark
-(50–68% absolute win margin on literature review quality; 14–38% on overall
-quality). The paper ships the exact prompts for every agent in Appendix F.
+The paper defines a five-agent pipeline 
+- Outline
+- Plotting
+- Literature Review
+- Section Writing
+- Content Refinement
+that substantially outperforms single-agent and tree-search baselines on the `PaperWritingBench` benchmark (50–68% absolute win margin on literature review quality; 14–38% on overall quality). The paper ships the exact prompts for every agent in Appendix F.
 
-This repo turns those prompts, schemas, halt rules, and verification pipelines
-into a set of **host-agent-executable skills**. There are **no API keys**, no
-SDK dependencies, no embedded LLM calls. The skills are instruction documents
-plus deterministic helpers; your coding agent does all LLM reasoning and web
-search using its own tools.
+This repo turns those prompts, schemas, halt rules, and verification pipelines into a set of **host-agent-executable skills**. There are **no API keys**, no SDK dependencies, no embedded LLM calls. The skills are instruction documents plus deterministic helpers; your coding agent does all LLM reasoning and web search using its own tools.
 
 ## How skills work here
 
@@ -42,10 +40,7 @@ Each skill is:
   Levenshtein fuzzy matching, BibTeX formatting, dedup, LaTeX sanity checks,
   coverage gates. No network, no LLM, no API keys.
 
-Everything else (LLM reasoning, web search, Semantic Scholar lookups, LaTeX
-compilation) is **delegated to the host agent** by instruction. See
-[`skills/paper-orchestra/references/host-integration.md`](skills/paper-orchestra/references/host-integration.md)
-for per-host invocation (Claude Code, Cursor, Antigravity, Cline, Aider).
+Everything else (LLM reasoning, web search, Semantic Scholar lookups, LaTeX compilation) is **delegated to the host agent** by instruction. See [`skills/paper-orchestra/references/host-integration.md`](skills/paper-orchestra/references/host-integration.md) for per-host invocation (Claude Code, Cursor, Antigravity, Cline, Aider).
 
 ## The seven skills
 
@@ -148,14 +143,9 @@ paper-orchestra/
 
 ## Fidelity to the paper
 
-Every agent prompt in `skills/*/references/prompt.md` is reproduced **verbatim**
-from Appendix F of arXiv:2604.05018, with a header pointing to the page number.
-See `docs/paper-fidelity.md` for a design-decision → paper-page map.
+Every agent prompt in `skills/*/references/prompt.md` is reproduced **verbatim** from Appendix F of arXiv:2604.05018, with a header pointing to the page number. See `docs/paper-fidelity.md` for a design-decision → paper-page map.
 
-On top of the paper, this repo adds a few deterministic hardening scripts
-(orphan-citation gate, anti-leakage grep, worklog-based rollback, provenance
-snapshots). These are clearly marked as out-of-paper improvements in
-`docs/paper-fidelity.md`.
+On top of the paper, this repo adds a few deterministic hardening scripts (orphan-citation gate, anti-leakage grep, worklog-based rollback, provenance snapshots). These are clearly marked as out-of-paper improvements in `docs/paper-fidelity.md`.
 
 ## Citation
 
