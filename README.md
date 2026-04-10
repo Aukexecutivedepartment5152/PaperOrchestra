@@ -117,14 +117,17 @@ web search tool.  Two optional integrations improve throughput or coverage:
   2026) — the figure-generation backbone used by PaperOrchestra for Step 2.
   Runs a Retriever → Planner → Stylist → Visualizer → Critic loop that
   produces publication-quality diagrams grounded in real paper examples.
-  Requires a **free [Gemini API key](https://aistudio.google.com/)**.
+  Requires **one** API key — fill at least one, you don't need both:
+  - **Google (Gemini)** — free at [aistudio.google.com](https://aistudio.google.com/)
+  - **OpenRouter** — at [openrouter.ai](https://openrouter.ai/) (preferred if both are set)
 
   ```bash
   git clone https://github.com/dwzhu-pku/PaperBanana
   cd PaperBanana
   pip install -r requirements.txt
   cp configs/model_config.template.yaml configs/model_config.yaml
-  # open model_config.yaml and paste your Gemini key into api_keys.google_api_key
+  # open model_config.yaml — paste your Gemini key into api_keys.google_api_key
+  #                        OR your OpenRouter key into api_keys.openrouter_api_key
   export PAPERBANANA_PATH="/path/to/PaperBanana"
   ```
 

@@ -32,14 +32,21 @@ git clone https://github.com/dwzhu-pku/PaperBanana /path/to/PaperBanana
 cd /path/to/PaperBanana
 uv pip install -r requirements.txt      # or: pip install -r requirements.txt
 
-# Configure models and API keys
+# Configure API key — fill at least one, you do not need both
 cp configs/model_config.template.yaml configs/model_config.yaml
-# Edit model_config.yaml:
-#   defaults.main_model_name       e.g. "gemini-3.1-pro-preview"
-#   defaults.image_gen_model_name  e.g. "gemini-3.1-flash-image-preview"
-#   api_keys.google_api_key        OR
-#   api_keys.openrouter_api_key    (set model names to "openrouter/<model>" if using OpenRouter)
+```
 
+Open `configs/model_config.yaml` and paste your key:
+
+| Provider | Where to get a key | Field to fill |
+|---|---|---|
+| **Google (Gemini)** | [aistudio.google.com](https://aistudio.google.com/) (free) | `api_keys.google_api_key` |
+| **OpenRouter** | [openrouter.ai](https://openrouter.ai/) | `api_keys.openrouter_api_key` |
+
+If both are set, OpenRouter is preferred. For OpenRouter, set the model names
+to `"openrouter/<model>"` (e.g. `"openrouter/google/gemini-pro-1.5"`).
+
+```bash
 # Point paper-orchestra at your clone
 export PAPERBANANA_PATH="/path/to/PaperBanana"
 ```
