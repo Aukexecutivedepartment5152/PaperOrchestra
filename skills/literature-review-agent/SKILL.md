@@ -151,13 +151,28 @@ python skills/literature-review-agent/scripts/s2_cache.py \
 
 **Step B — live S2 request** (cache MISS only, throttle to 1 QPS):
 
-Use your host's URL fetch tool to GET:
+**Preferred:** use the bundled `scripts/s2_search.py` helper — it handles
+auth, retries, and 429 back-off automatically:
+
+```bash
+python skills/literature-review-agent/scripts/s2_search.py \
+    --query "<URL-decoded candidate title>" --limit 5
+# If SEMANTIC_SCHOLAR_API_KEY is set the key is forwarded automatically.
+# If not, the public unauthenticated endpoint is used (≤1 QPS, still works).
+```
+
+Check whether the key is configured before starting Phase 2:
+
+```bash
+python skills/literature-review-agent/scripts/s2_search.py --check-key
+```
+
+**Fallback:** if you prefer your host's URL fetch tool, GET:
 ```
 https://api.semanticscholar.org/graph/v1/paper/search?query=<URL-encoded title>&limit=5&fields=title,abstract,year,authors,venue,externalIds
 ```
-
-This is a **public, unauthenticated endpoint** — no API key. Be polite: ≤1
-request per second for live requests. Cache hits are free.
+Add header `x-api-key: <SEMANTIC_SCHOLAR_API_KEY>` if the env var is set.
+Be polite: ≤1 request per second for live requests. Cache hits are free.
 
 **Step C — store in cache** (after every successful live request):
 ```bash
@@ -337,4 +352,5 @@ If your host has no web search tool, switch to degraded mode:
 - `scripts/dedupe_by_id.py` — dedup verified pool by S2 paperId
 - `scripts/bibtex_format.py` — build refs.bib from JSON pool
 - `scripts/citation_coverage.py` — ≥90% citation coverage gate
+- `scripts/s2_search.py` — **NEW** Semantic Scholar title-search helper; reads `SEMANTIC_SCHOLAR_API_KEY` from env (optional — falls back to unauthenticated)
 - `scripts/exa_search.py` — optional Exa Phase 1 backend (reads `EXA_API_KEY` from env)

@@ -93,9 +93,25 @@ For Cursor / Antigravity / Cline / Aider, see `skills/paper-orchestra/references
 
 ## Optional integrations
 
-The pipeline still requires **zero API keys to run** under any host with a
-native web search tool. The only optional integration is for hosts that
-*lack* one:
+The pipeline requires **zero API keys to run** under any host with a native
+web search tool.  Two optional integrations improve throughput or coverage:
+
+- **[Semantic Scholar API key](https://api.semanticscholar.org/)** — Phase 2
+  (citation verification) uses the public unauthenticated Semantic Scholar
+  endpoint by default (≤1 QPS).  A free API key raises the rate limit and
+  reduces 429 back-off during large runs.  The bundled
+  `scripts/s2_search.py` reads `SEMANTIC_SCHOLAR_API_KEY` from the
+  environment automatically — if the variable is absent it silently falls
+  back to unauthenticated mode.  The repo never commits a key.
+
+  ```bash
+  export SEMANTIC_SCHOLAR_API_KEY="your-key-here"   # https://api.semanticscholar.org/
+  # verify it's picked up:
+  python skills/literature-review-agent/scripts/s2_search.py --check-key
+  ```
+
+  See `skills/literature-review-agent/references/s2-api-cookbook.md` for
+  endpoint details, field reference, and error-handling notes.
 
 - **[Exa](https://exa.ai)** — research-paper-focused search engine. The
   literature-review-agent can use it as a Phase 1 candidate-discovery

@@ -1,12 +1,42 @@
 # Semantic Scholar API Cookbook
 
-How to verify a candidate paper via the public Semantic Scholar API. **No
-API key is required.** The host agent uses its own URL fetch tool against
-the endpoints below.
+How to verify a candidate paper via the Semantic Scholar Graph API.
 
 Base: `https://api.semanticscholar.org/graph/v1`
 
 Reference: <https://api.semanticscholar.org/api-docs/graph>
+
+## API key (optional)
+
+The pipeline uses the **public, unauthenticated endpoint** by default — no key
+required.  If you have a Semantic Scholar API key you can pass it via the
+`x-api-key` header to get higher rate limits (useful for large batches).
+
+Get a free key at <https://api.semanticscholar.org/> then export it once:
+
+```bash
+export SEMANTIC_SCHOLAR_API_KEY="your-key-here"
+```
+
+The bundled `scripts/s2_search.py` helper picks this up automatically.  If the
+variable is not set the script falls back to the unauthenticated endpoint — the
+pipeline works fine either way; just keep to ≤1 QPS on live requests.
+
+```bash
+# check whether the key is configured
+python skills/literature-review-agent/scripts/s2_search.py --check-key
+
+# search by title (key used automatically if set)
+python skills/literature-review-agent/scripts/s2_search.py \
+    --query "Attention is All You Need" --limit 5
+
+# print the raw S2 JSON
+python skills/literature-review-agent/scripts/s2_search.py \
+    --query "BERT pre-training" --raw
+```
+
+The repo never commits a key.  Key management is your responsibility (shell
+environment, 1Password, doppler, etc.).
 
 ## Endpoint 1 — Search by title
 
