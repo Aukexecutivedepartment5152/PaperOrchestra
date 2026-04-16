@@ -30,7 +30,9 @@ that substantially outperforms single-agent and tree-search baselines on the `Pa
 
 This repo turns those prompts, schemas, halt rules, and verification pipelines into a set of **host-agent-executable skills**. There are **no API keys**, no SDK dependencies, no embedded LLM calls. The skills are instruction documents plus deterministic helpers; your coding agent does all LLM reasoning and web search using its own tools.
 
+<p align="center">
 <img width="640" height="413" alt="image" src="https://github.com/user-attachments/assets/073630c8-9790-4b38-b8c4-184cec6eee06" />
+</p>
 
 ## How skills work here
 
