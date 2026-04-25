@@ -342,6 +342,145 @@ def extract_abstract(md_text: str) -> str:
     return " ".join(b for b in buf if b)
 
 
+# ── ASCII table parser ────────────────────────────────────────────────────────
+
+def _is_ascii_table(lines: list[str]) -> bool:
+    """Return True if the block looks like a +---+ style ASCII table."""
+    content = [l for l in lines if l.strip()]
+    if len(content) < 2:
+        return False
+    sep_lines  = [l for l in content if re.match(r'^\s*\+[-+]+\+\s*$', l)]
+    pipe_lines = [l for l in content if l.strip().startswith("|")]
+    return len(sep_lines) >= 1 and len(pipe_lines) >= 1
+
+
+def _col_widths_from_sep(sep_line: str, available_w: float) -> list[float]:
+    """Derive proportional column widths from a +---+---+ separator line."""
+    # Each segment between + markers gives a relative width in chars
+    segs = re.split(r'\+', sep_line.strip())
+    segs = [s for s in segs if s]   # remove empties at start/end
+    if not segs:
+        return []
+    chars = [len(s) for s in segs]
+    total = sum(chars)
+    return [available_w * c / total for c in chars]
+
+
+def _parse_rows(lines: list[str]) -> list[list[str]]:
+    """
+    Parse an ASCII table into logical rows.
+
+    Separator lines (+---+) delimit rows.  Content lines (| ... |) between
+    separators belong to the same logical row; multi-line cells are joined
+    with a space.
+    """
+    logical_rows: list[list[str]] = []
+    current_lines: list[list[str]] = []   # list of column-text lists
+
+    def flush():
+        if not current_lines:
+            return
+        # Merge multi-line cells column-by-column
+        num_cols = max(len(r) for r in current_lines)
+        merged = []
+        for c in range(num_cols):
+            parts = []
+            for row_line in current_lines:
+                if c < len(row_line):
+                    v = row_line[c].strip()
+                    if v:
+                        parts.append(v)
+            merged.append(" ".join(parts))
+        logical_rows.append(merged)
+        current_lines.clear()
+
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if re.match(r'^\+[-+]+\+$', stripped):
+            flush()
+        elif stripped.startswith("|"):
+            # Split on | and strip whitespace from each cell
+            cells = [c.strip() for c in stripped.split("|")]
+            # Remove empty strings that come from leading/trailing |
+            cells = cells[1:-1] if len(cells) > 2 else cells
+            current_lines.append(cells)
+
+    flush()
+    return logical_rows
+
+
+def try_parse_ascii_table(code_lines: list[str],
+                           styles: dict,
+                           col_width: float) -> list | None:
+    """
+    If code_lines is an ASCII table, parse and return ReportLab flowables.
+    Returns None if the block is not a table.
+    """
+    if not _is_ascii_table(code_lines):
+        return None
+
+    # Derive column widths from the first separator line
+    sep_line = next((l for l in code_lines if re.match(r'^\s*\+[-+]+\+', l)), None)
+    col_widths = _col_widths_from_sep(sep_line, col_width - 4) if sep_line else []
+
+    rows = _parse_rows(code_lines)
+    if not rows:
+        return None
+
+    S = styles
+
+    # Build Paragraph cells
+    tbl_style = ParagraphStyle(
+        "TblCell", fontName="Helvetica", fontSize=7, leading=9,
+        textColor=C_DARK, alignment=TA_LEFT,
+    )
+    hdr_style = ParagraphStyle(
+        "TblHdr", fontName="Helvetica-Bold", fontSize=7, leading=9,
+        textColor=colors.white, alignment=TA_LEFT,
+    )
+
+    para_rows = []
+    for r_idx, row in enumerate(rows):
+        style = hdr_style if r_idx == 0 else tbl_style
+        para_rows.append([Paragraph(cell, style) for cell in row])
+
+    # Normalise column count
+    max_cols = max(len(r) for r in para_rows)
+    for row in para_rows:
+        while len(row) < max_cols:
+            row.append(Paragraph("", tbl_style))
+
+    # Column widths: use proportional if available, else equal
+    if col_widths and len(col_widths) == max_cols:
+        cw = col_widths
+    else:
+        cw = [col_width / max_cols] * max_cols
+
+    t = Table(para_rows, colWidths=cw, repeatRows=1)
+    t.setStyle(TableStyle([
+        # Header row
+        ("BACKGROUND",    (0, 0), (-1, 0),  C_NAVY),
+        ("TEXTCOLOR",     (0, 0), (-1, 0),  colors.white),
+        # Data rows alternating
+        ("BACKGROUND",    (0, 1), (-1, -1), colors.white),
+        ("ROWBACKGROUNDS",(0, 1), (-1, -1),
+         [colors.white, colors.HexColor("#f1f5f9")]),
+        # Grid
+        ("BOX",           (0, 0), (-1, -1), 0.5, C_RULE),
+        ("INNERGRID",     (0, 0), (-1, -1), 0.3, C_RULE),
+        # Padding
+        ("TOPPADDING",    (0, 0), (-1, -1), 3),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 3),
+        ("LEFTPADDING",   (0, 0), (-1, -1), 4),
+        ("RIGHTPADDING",  (0, 0), (-1, -1), 4),
+        ("VALIGN",        (0, 0), (-1, -1), "TOP"),
+    ]))
+
+    return [Spacer(1, 4), t, Spacer(1, 6)]
+
+
 # ── Markdown → flowable list ──────────────────────────────────────────────────
 
 def parse_markdown(md_text: str, styles: dict, col_width: float,
@@ -476,19 +615,22 @@ def parse_markdown(md_text: str, styles: dict, col_width: float,
             i += 1
             code_lines = []
             while i < len(lines) and not lines[i].strip().startswith("```"):
-                escaped = (lines[i]
-                           .replace("&", "&amp;")
-                           .replace("<", "&lt;")
-                           .replace(">", "&gt;"))
-                code_lines.append(escaped)
+                code_lines.append(lines[i])
                 i += 1
             i += 1
             if code_lines:
-                xml = "<br/>".join(
-                    f'<font name="Courier" size="7">{l}</font>'
-                    for l in code_lines[:25]
-                )
-                flowables.append(Paragraph(xml, S["code"]))
+                # If the block looks like an ASCII table, render it properly
+                tbl = try_parse_ascii_table(code_lines, S, col_width)
+                if tbl is not None:
+                    flowables.extend(tbl)
+                else:
+                    xml = "<br/>".join(
+                        f'<font name="Courier" size="7">'
+                        + l.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                        + '</font>'
+                        for l in code_lines[:25]
+                    )
+                    flowables.append(Paragraph(xml, S["code"]))
             continue
 
         # Reference line: [N] Author...
